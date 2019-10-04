@@ -35,5 +35,7 @@ Route::get('/dashboard/customer/file/delete', 'CustomerController@deleteFile');
 
 // route for all admins
 Route::get('/dashboard/systemadmin/create-admin/', 'CommonDataController@createAdmin')->middleware('systemadmin');
+Route::post('/dashboard/systemadmin/create-admin/', 'CommonDataController@storeAdmin')->middleware('systemadmin');
+
 Route::get('/dashboard/admin/create-manager/', 'CommonDataController@createManager')->middleware('admin');
 Route::get('/dashboard/customer-list/', 'CommonDataController@customerList');
