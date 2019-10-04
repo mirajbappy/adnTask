@@ -6,6 +6,18 @@ use Illuminate\Http\Request;
 
 class SystemAdminController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('systemadmin');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +27,7 @@ class SystemAdminController extends Controller
     {
         return view('systemadmin.dashboard');
     }
+
 
     /**
      * Show the form for creating a new resource.

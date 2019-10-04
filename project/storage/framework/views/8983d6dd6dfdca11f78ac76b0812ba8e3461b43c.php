@@ -1,33 +1,32 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 
-			@if(session('message'))
+			<?php if(session('message')): ?>
 			<div class="alert alert-success text-center alert-dismissable fade in">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<strong>{{session('message')}} </strong>
+				<strong><?php echo e(session('message')); ?> </strong>
 			</div>
-			@endif
+			<?php endif; ?>
 
 			<div class="panel panel-default">
 				<div class="panel-heading">Update Profile</div>
 
 				<div class="panel-body">
-					<form action="{{url('dashboard/customer/update')}}" method="post" enctype="multipart/form-data">
-						{{csrf_field()}}
+					<form action="<?php echo e(url('dashboard/customer/update')); ?>" method="post" enctype="multipart/form-data">
+						<?php echo e(csrf_field()); ?>
+
 
 						<div class="form-group">
 							<label>Name</label>
-							<input type="text" name="name" class="form-control" value="{{Auth::guard('customer')->user()->name}}" required="">
+							<input type="text" name="name" class="form-control" value="<?php echo e(Auth::guard('customer')->user()->name); ?>" required="">
 
-							@if ($errors->has('name'))
+							<?php if($errors->has('name')): ?>
 							<span class="help-block">
-								<strong>{{ $errors->first('name') }}</strong>
+								<strong><?php echo e($errors->first('name')); ?></strong>
 							</span>
-							@endif
+							<?php endif; ?>
 
 						</div>
 
@@ -39,15 +38,15 @@
 								<div class="col-md-8">
 									<input type="file" name="file" class="form-control" value="">
 
-									@if ($errors->has('file'))
+									<?php if($errors->has('file')): ?>
 									<span class="help-block">
-										<strong>{{ $errors->first('file') }}</strong>
+										<strong><?php echo e($errors->first('file')); ?></strong>
 									</span>
-									@endif
+									<?php endif; ?>
 
 								</div>
 								<div class="col-md-2">
-									<a href="{{url('/dashboard/customer/file/delete')}}" onclick="return confirm('Are you sure？')" class="btn btn-danger btn-block">Delete</a>
+									<a href="<?php echo e(url('/dashboard/customer/file/delete')); ?>" onclick="return confirm('Are you sure？')" class="btn btn-danger btn-block">Delete</a>
 								</div>
 								<div class="col-md-2">
 									<button type="button" class="btn btn-info btn-block preview" data-target="#previewModal" data-toggle="modal" >Preview</button>
@@ -89,9 +88,9 @@
 </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('js')
+<?php $__env->startPush('js'); ?>
 <script type="text/javascript">
 	$(".preview").click(function(){
 		var site_url = jQuery('.site_url').val();
@@ -102,10 +101,11 @@
 			method: "GET",
 			success:function(data){
 				console.log(data);
-				var Banner = '{{asset("uploads/customer")}}'+'/'+data.id+'/'+data.file;
+				var Banner = '<?php echo e(asset("uploads/customer")); ?>'+'/'+data.id+'/'+data.file;
 				$(".modal-body #file").attr('src', Banner);
 			}
 		});
 	});
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
