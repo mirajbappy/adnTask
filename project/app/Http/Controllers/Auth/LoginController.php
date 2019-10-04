@@ -35,5 +35,69 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('guest:systemadmin')->except('logout');
+        $this->middleware('guest:admin')->except('logout');
+        $this->middleware('guest:manager')->except('logout');
+        $this->middleware('guest:customer')->except('logout');
     }
+
+
+    public function login(\Request $request)
+    {
+        $this->validateLogin($request);
+
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            return $this->sendLockoutResponse($request);
+        }
+
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+            ]);
+
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended('/admin');
+        }
+
+    }
+
+
+    // // admin logins
+    // public function showAdminLoginForm()
+    // {
+    //     return view('auth.login', ['url' => 'admin']);
+    // }
+
+    // public function adminLogin(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'email'   => 'required|email',
+    //         'password' => 'required|min:6'
+    //     ]);
+
+    //     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+
+    //         return redirect()->intended('/admin');
+    //     }
+    //     return back()->withInput($request->only('email', 'remember'));
+    // }
+
+     // if($this->guard()->validate($this->credentials($request))) {
+     //        if(Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_activated' => 1])) {
+     //            // return redirect()->intended('dashboard');
+     //        }  else {
+     //            $this->incrementLoginAttempts($request);
+     //            return response()->json([
+     //                'error' => 'This account is not activated.'
+     //                ], 401);
+     //        }
+     //    } else {
+     //        // dd('ok');
+     //        $this->incrementLoginAttempts($request);
+     //        return response()->json([
+     //            'error' => 'Credentials do not match our database.'
+     //            ], 401);
+     //    }
+
 }
